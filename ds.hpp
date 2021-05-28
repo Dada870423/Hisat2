@@ -11,10 +11,13 @@ class Node
 public:
     char label; // ACGT
     int id; // location in whole genome
-
-    int to;
     
-    Node(char _label, int _id, int _to) : label(_label), id(_id), to(_to) { } 
+    int successor;
+    int to;
+    std::string preFix;
+
+    
+    Node(char _label, int _id, int _to, char _rank) : label(_label), id(_id), to(_to), successor(_to) { preFix = std::string(1, _rank); } 
     ~Node() { }
 };
 
