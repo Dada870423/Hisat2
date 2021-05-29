@@ -28,6 +28,7 @@ public:
     char from; // ACGT
     int successor;
     int id;
+    bool sorted = false;
     std::string rank;
 
     Prefix(char _from, int _id, int _successor, char _rank) : from(_from), id(_id), successor(_successor) { rank = std::string(1, _rank);  }
