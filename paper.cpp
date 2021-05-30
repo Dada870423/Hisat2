@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "build_graph.hpp"
+#include "G_prefix_sort.hpp"
 #include "G_ds.hpp"
 
 int main(void)
@@ -22,9 +23,29 @@ int main(void)
     for(auto& node : NodeList)
         for(auto& TO : node.to)
             std::cout << "id: " << node.id << " , to: " << TO << std::endl;
-
+    
+    //G_prefix_sort::show(NodeList);
 //    for(auto& node : NodeList)
 //        for(auto& inc : node.income)
 //            std::cout << "id: " << node.id << " , inc: " << inc << std::endl;
+    
+    std::vector<Prefix> PrefixList;
+    G_prefix_sort::init_split(NodeList);
 
+    for(auto& node : NodeList)
+    {
+        std::cout << "id: " << node.id << " , label: " << node.label;
+        for(auto& to : node.to)
+            std::cout << " , to: " << to << " ";
+        std::cout << std::endl;
+    }
+    //G_prefix_sort::init_prefix(NodeList, PrefixList);
+    std::cout << "test: ";
+    //for(auto& fuck6 : NodeList[6].to)
+    //    std::cout << fuck6 << " ";
+
+    std::cout << "show: \n";
+    G_prefix_sort::show(NodeList);
+    //for(auto& pre : PrefixList)
+    //    std::cout << "from: " << pre.from << " , id: " << pre.id << " , rank: " << pre.rank << std::endl;
 }

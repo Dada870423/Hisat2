@@ -17,13 +17,13 @@ public:
     std::string preFix;
 
     
-    Node(char _label, int _id, int _income, int _to, char _rank) : label(_label), id(_id) { 
-        preFix = std::string(1, _rank);
+    Node(char _label, int _id, int _income, int _to) : label(_label), id(_id) { 
+        //preFix = std::string(1, _rank);
         to.push_back(_to);
         income.push_back(_income);
     } 
-    Node(char _label, int _id, int _income) : label(_label), id(_id) { 
-        income.push_back(_income);
+    Node(char _label, int _id, int _to) : label(_label), id(_id) { 
+        to.push_back(_to);
     } 
     ~Node() { }
 };
