@@ -39,13 +39,24 @@ int main(void)
             std::cout << " , to: " << to << " ";
         std::cout << std::endl;
     }
-    //G_prefix_sort::init_prefix(NodeList, PrefixList);
     std::cout << "test: ";
     //for(auto& fuck6 : NodeList[6].to)
     //    std::cout << fuck6 << " ";
 
     std::cout << "show: \n";
     G_prefix_sort::show(NodeList);
-    //for(auto& pre : PrefixList)
-    //    std::cout << "from: " << pre.from << " , id: " << pre.id << " , rank: " << pre.rank << std::endl;
+    
+    G_prefix_sort::init_prefix(NodeList, PrefixList);
+    for(auto& pre : PrefixList)
+        std::cout << "from: " << pre.from << " , id: " << pre.id << " , rank: " << NodeList[pre.id].preFix << " , sorted: " << pre.sorted << std::endl;
+    
+    std::cout << "node: $$$$$$$$$$$$$\n";
+    
+    for(auto& node : NodeList)
+    {
+        std::cout << "from: " << node.label << " , id: " << node.id;
+        for(auto& To : node.to)
+            std::cout << " , to: " << To;
+        std::cout << "\n";
+    }
 }
