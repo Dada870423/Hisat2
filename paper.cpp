@@ -39,24 +39,47 @@ int main(void)
             std::cout << " , to: " << to << " ";
         std::cout << std::endl;
     }
-    std::cout << "test: ";
     //for(auto& fuck6 : NodeList[6].to)
     //    std::cout << fuck6 << " ";
 
-    std::cout << "show: \n";
-    G_prefix_sort::show(NodeList);
     
     G_prefix_sort::init_prefix(NodeList, PrefixList);
     for(auto& pre : PrefixList)
-        std::cout << "from: " << pre.from << " , id: " << pre.id << " , rank: " << NodeList[pre.id].preFix << " , sorted: " << pre.sorted << std::endl;
+        std::cout << "from: " << pre.from << " , id: " << pre.id << " , rank: " << NodeList[pre.id].preFix << " suc: " << pre.successor << " , sorted: " << pre.sorted << std::endl;
+    std::cout << "init done\n\n\n";
+    //for(auto& pre : PrefixList)
+    //    std::cout << "from: " << pre.from << " , id: " << pre.id << " , rank: " << NodeList[pre.id].preFix << " , sorted: " << pre.sorted << std::endl;
     
-    std::cout << "node: $$$$$$$$$$$$$\n";
+    //std::cout << "node: $$$$$$$$$$$$$\n";
     
-    for(auto& node : NodeList)
-    {
-        std::cout << "from: " << node.label << " , id: " << node.id;
-        for(auto& To : node.to)
-            std::cout << " , to: " << To;
-        std::cout << "\n";
-    }
+    //for(auto& node : NodeList)
+    //{
+    //    std::cout << "from: " << node.label << " , id: " << node.id;
+    //    for(auto& To : node.to)
+    //        std::cout << " , to: " << To;
+    //    std::cout << "\n";
+    //}
+    std::cout << "iter 1: \n";
+    G_prefix_sort::double_node(NodeList, PrefixList);
+    int node_id = 0;
+    //for(auto& node : NodeList)
+    //{
+    //    std::cout << "from: ( " << node.id << " ) " << node.label << " , id: " << node.id << " preFix: " << node.preFix << "\n";
+    //    for(auto& To : node.to)
+    //        std::cout << " , to: " << To;
+    //    std::cout << "\n";
+    //    ++node_id;
+    //}
+    //std::cout << "node done\n";
+    G_prefix_sort::prefix_sort(NodeList, PrefixList);
+
+    for(auto& pre : PrefixList)
+        std::cout << "from: " << pre.from << " , id: " << pre.id << " , rank: " << NodeList[pre.id].preFix << " suc: " << pre.successor << " , sorted: " << pre.sorted << std::endl;
+
+    G_prefix_sort::double_node(NodeList, PrefixList);
+    G_prefix_sort::prefix_sort(NodeList, PrefixList);
+    std::cout << "iter 2: \n";
+    for(auto& pre : PrefixList)
+        std::cout << "from: " << pre.from << " , id: " << pre.id << " , rank: " << NodeList[pre.id].preFix << " suc: " << pre.successor << " , sorted: " << pre.sorted << std::endl;
+    return 0;
 }

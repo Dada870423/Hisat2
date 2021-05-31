@@ -38,10 +38,25 @@ public:
         }
     }
 
-    static bool check_sort(std::vector<Prefix>& PrefixList)
-    {
+    static bool check_sort(std::vector<Node>& NodeList, std::vector<Prefix>& PrefixList)
+    {//NodeList[pre.id].preFix NodeList[PrefixList[i].id].label
         for(int i = 0; i < PrefixList.size(); ++i)
         {
+            if(i == PrefixList.size() - 1) // last prefix
+            {
+                if(NodeList[PrefixList[i].id].label != NodeList[PrefixList[i-1].id].label || NodeList[PrefixList[i].id].preFix != NodeList[PrefixList[i-1].id].preFix) // Unique 
+                    PrefixList[i].sorted = true;
+            }
+            else if(i == 0)
+            {
+                if(NodeList[PrefixList[i].id].label != NodeList[PrefixList[i+1].id].label || NodeList[PrefixList[i].id].preFix != NodeList[PrefixList[i+1].id].preFix) // Unique 
+                    PrefixList[i].sorted = true;
+            }
+            else
+                if((NodeList[PrefixList[i].id].label != NodeList[PrefixList[i-1].id].label || NodeList[PrefixList[i].id].preFix != NodeList[PrefixList[i-1].id].preFix) &&
+                  (NodeList[PrefixList[i].id].label != NodeList[PrefixList[i+1].id].label || NodeList[PrefixList[i].id].preFix != NodeList[PrefixList[i+1].id].preFix))
+                    PrefixList[i].sorted = true;
+            /*
             if(i == PrefixList.size() - 1) // last prefix
             {
                 if(PrefixList[i].from != PrefixList[i-1].from || PrefixList[i].rank != PrefixList[i-1].rank) // Unique 
@@ -56,6 +71,7 @@ public:
                 if((PrefixList[i].from != PrefixList[i-1].from || PrefixList[i].rank != PrefixList[i-1].rank) &&
                   (PrefixList[i].from != PrefixList[i+1].from || PrefixList[i].rank != PrefixList[i+1].rank))
                     PrefixList[i].sorted = true;
+            */
         }
     }
 
@@ -82,6 +98,7 @@ public:
 
     static void init_prefix(std::vector<Node>& NodeList, std::vector<Prefix>& PrefixList)
     {
+        /*
         std::queue<int> Q;
         bool visit[NodeList.size()] {false};
         Q.push(0);
@@ -90,7 +107,7 @@ public:
         {
             auto now_node = Q.front();
             Q.pop();
-            PrefixList.emplace_back(NodeList[now_node].label, now_node, NodeList[now_node].to[0], NodeList[NodeList[now_node].to[0]].label);
+            PrefixList.emplace_back(NodeList[now_node].label, now_node, NodeList[now_node].to[0], NodeList[NodeList[now_node].id].label);
             NodeList[now_node].preFix = std::string(1, NodeList[NodeList[now_node].to[0]].label);
             for(auto& To : NodeList[now_node].to)
             {
@@ -101,6 +118,11 @@ public:
                 }
 
             }
+        }*/
+        for(int iter_node = 0; iter_node < NodeList.size(); ++iter_node)
+        {
+            PrefixList.emplace_back(NodeList[iter_node].label, iter_node, NodeList[iter_node].to[0], '\0');//NodeList[NodeList[iter_node].to[0]].label);
+            NodeList[iter_node].preFix = std::string(1, NodeList[NodeList[iter_node].to[0]].label);
         }
         std::sort(PrefixList.begin(), PrefixList.end(), [&NodeList](Prefix a, Prefix b) {
             if(a.from == b.from)
@@ -108,7 +130,65 @@ public:
             else
                 return a.from < b.from;
         } );
-        check_sort(PrefixList);
+        check_sort(NodeList, PrefixList);
+    }
+
+    static void double_node(std::vector<Node>& NodeList, std::vector<Prefix>& PrefixList)
+    {
+        int prefix_num = PrefixList.size();
+        int ori_prefix_num = PrefixList.size();
+        for(int iter_prefix = 0; iter_prefix < ori_prefix_num; ++iter_prefix)
+        {
+            if(PrefixList[iter_prefix].sorted)
+                continue;
+            else
+            {
+                //if(NodeList[PrefixList[iter_prefix].id]].to.size() == 1) // only 1 outdegree
+                //{
+                //    PrefixList[iter_prefix].rank += NodeList[PrefixList[iter_prefix].successor].to[0].preFix;
+                //}
+                //else
+                
+                for(int iter_to = 1; iter_to < NodeList[PrefixList[iter_prefix].id].to.size(); ++iter_to)
+                {
+                    int node_num = NodeList.size();
+                    int prefix_num = PrefixList.size();
+                    //construct new node
+                    NodeList.emplace_back(NodeList[PrefixList[iter_prefix].id].label, PrefixList[iter_prefix].id, NodeList[PrefixList[iter_prefix].id].to[iter_to]);
+                    for(auto& inc : NodeList[PrefixList[iter_prefix].id].income)
+                        NodeList[inc].to.push_back(node_num);
+                    NodeList[node_num].preFix = NodeList[PrefixList[iter_prefix].id].preFix;
+                    
+                    //construct new prefix
+                    PrefixList.emplace_back(NodeList[iter_prefix].label, node_num, NodeList[PrefixList[iter_prefix].id].to[iter_to], 'X');
+                    PrefixList[prefix_num].rank = PrefixList[iter_prefix].rank;
+                    PrefixList[prefix_num].successor = NodeList[PrefixList[iter_prefix].id].to[iter_to];//NodeList[PrefixList[iter_prefix].id].id;
+                }
+                NodeList[PrefixList[iter_prefix].id].to.resize(1);
+                
+            }
+        }
+    }
+    static void prefix_sort(std::vector<Node>& NodeList, std::vector<Prefix>& PrefixList)
+    {
+        for(auto& prefix : PrefixList)
+        {
+            if(!prefix.sorted)
+                prefix.rank = NodeList[prefix.successor].label + NodeList[prefix.successor].preFix;
+        }
+        for(auto& prefix :PrefixList)
+        {
+            if(!prefix.sorted)
+                NodeList[prefix.id].preFix = prefix.rank;
+        }
+        
+        std::sort(PrefixList.begin(), PrefixList.end(), [&NodeList](Prefix a, Prefix b) {
+            if(a.from == b.from)
+                return NodeList[a.id].preFix < NodeList[b.id].preFix;
+            else
+                return a.from < b.from;
+        } );
+        check_sort(NodeList, PrefixList);
     }
 
 
