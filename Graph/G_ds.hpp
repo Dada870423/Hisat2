@@ -44,16 +44,4 @@ public:
 };
 
 
-
-class Edge
-{
-public:
-    int from, to;
-    char c_from, c_to;
-
-    Edge(int _from, int _to, char _c_from, char _c_to) : from(_from), to(_to), c_from(_c_from), c_to(_c_to) { }
-    ~Edge() { }
-};
-
-
 #endif
